@@ -17,4 +17,5 @@ export const ROUTES = {
   home: "/",
   demo: "/demo",
   signup: "/signup",
+  bookDemo: "/book-demo",
 } as const;
