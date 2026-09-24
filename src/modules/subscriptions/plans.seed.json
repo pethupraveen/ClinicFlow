@@ -1,0 +1,58 @@
+{
+  "_comment": "Placeholder plan catalogue. Phase 10 moves this into the plans/plan_limits tables; nothing outside modules/subscriptions may read prices or limits directly.",
+  "plans": [
+    {
+      "code": "TRIAL",
+      "name": "Free Trial",
+      "isPublic": false,
+      "pricePaise": 0,
+      "currency": "INR",
+      "billingCycle": "NONE",
+      "trialDays": 15,
+      "limits": { "doctors": 3, "staff_users": 2, "appointments": 200, "conversations": 500 },
+      "features": { "booking": true, "reminders": true, "faq": true, "handoff": true, "dashboard": true },
+      "display": { "tagline": "", "popular": false },
+      "sortOrder": 0
+    },
+    {
+      "code": "STARTER",
+      "name": "Starter",
+      "isPublic": true,
+      "pricePaise": 149900,
+      "currency": "INR",
+      "billingCycle": "MONTHLY",
+      "limits": { "doctors": 1, "staff_users": 1, "appointments": 300, "conversations": 600 },
+      "features": { "booking": true, "reminders": true, "faq": true, "handoff": true, "dashboard": true },
+      "display": { "tagline": "For a single-doctor clinic", "popular": false },
+      "sortOrder": 1
+    },
+    {
+      "code": "GROWTH",
+      "name": "Growth",
+      "isPublic": true,
+      "pricePaise": 249900,
+      "currency": "INR",
+      "billingCycle": "MONTHLY",
+      "limits": { "doctors": 3, "staff_users": 3, "appointments": 1000, "conversations": 2000 },
+      "features": { "booking": true, "reminders": true, "faq": true, "handoff": true, "dashboard": true },
+      "display": { "tagline": "For clinics with a few doctors", "popular": true },
+      "sortOrder": 2
+    },
+    {
+      "code": "PRO",
+      "name": "Pro",
+      "isPublic": true,
+      "pricePaise": 399900,
+      "currency": "INR",
+      "billingCycle": "MONTHLY",
+      "limits": { "doctors": 10, "staff_users": 10, "appointments": 3000, "conversations": 6000 },
+      "features": { "booking": true, "reminders": true, "faq": true, "handoff": true, "dashboard": true },
+      "display": { "tagline": "For busy multi-doctor clinics", "popular": false },
+      "sortOrder": 3
+    }
+  ],
+  "settings": {
+    "priceTaxNote": "+ GST",
+    "expiredDataRetentionDays": 90
+  }
+}

@@ -1,0 +1,1010 @@
+/* ---------- layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: 56px;
+}
+
+.sectionSoft {
+  background: var(--bg-soft);
+}
+
+@media (min-width: 900px) {
+  .section {
+    padding-block: 88px;
+  }
+}
+
+.sectionHead {
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.sectionHeadCenter {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+
+.h2 {
+  font-size: clamp(26px, 5.5vw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.lead {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--muted);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btnPrimary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  background: var(--brand-strong);
+}
+
+.btnSecondary {
+  background: #fff;
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+.btnSecondary:hover {
+  background: var(--brand-soft);
+}
+
+.btnSmall {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.btnBlock {
+  width: 100%;
+}
+
+/* ---------- header ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgb(255 255 255 / 92%);
+  backdrop-filter: saturate(1.4) blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 60px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.logoMark {
+  width: 28px;
+  height: 28px;
+}
+
+.logoSub {
+  color: var(--brand);
+}
+
+.nav {
+  display: none;
+  gap: 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--brand);
+}
+
+@media (min-width: 900px) {
+  .nav {
+    display: flex;
+  }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  padding-block: 28px 48px;
+  background: linear-gradient(180deg, var(--brand-soft) 0%, #fff 70%);
+}
+
+.heroGrid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding-block: 72px 88px;
+  }
+  .heroGrid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+  }
+}
+
+.h1 {
+  font-size: clamp(32px, 8.6vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 850;
+}
+
+.heroSub {
+  margin-top: 14px;
+  font-size: 17px;
+  color: var(--ink-2);
+  max-width: 540px;
+}
+
+@media (min-width: 900px) {
+  .heroSub {
+    font-size: 19px;
+  }
+}
+
+.ctaRow {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+@media (min-width: 480px) {
+  .ctaRow {
+    grid-template-columns: auto auto;
+    justify-content: start;
+  }
+}
+
+.trialNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.trialNote svg {
+  width: 16px;
+  height: 16px;
+  color: var(--brand);
+  flex: none;
+}
+
+.heroVisual {
+  position: relative;
+  max-width: 360px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.bookingToast {
+  position: absolute;
+  right: -8px;
+  bottom: 36px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 230px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  line-height: 1.35;
+  animation: toastIn 0.5s 1.2s both ease-out;
+}
+
+.bookingToast strong {
+  display: block;
+  font-size: 13px;
+}
+
+.toastIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.toastIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (min-width: 900px) {
+  .bookingToast {
+    right: -48px;
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- phone + WhatsApp chat mock ---------- */
+.phone {
+  width: 100%;
+  max-width: 340px;
+  margin-inline: auto;
+  border-radius: 32px;
+  padding: 10px;
+  background: #1c2522;
+  box-shadow: 0 24px 48px rgb(17 32 27 / 18%);
+}
+
+.phoneScreen {
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--wa-wall);
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--wa-header);
+  color: #fff;
+}
+
+.chatAvatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--wa-header);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.chatTitle {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.chatStatus {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.chatBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.msg {
+  position: relative;
+  max-width: 84%;
+  padding: 7px 10px 18px;
+  border-radius: 10px;
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 13%);
+  white-space: pre-line;
+}
+
+.msgIn {
+  align-self: flex-start;
+  background: var(--wa-in);
+  border-top-left-radius: 2px;
+}
+
+.msgOut {
+  align-self: flex-end;
+  background: var(--wa-out);
+  border-top-right-radius: 2px;
+}
+
+.msgTime {
+  position: absolute;
+  right: 8px;
+  bottom: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  color: #667781;
+}
+
+.msgTime svg {
+  width: 14px;
+  height: 14px;
+  color: #53bdeb;
+}
+
+.replyButtons {
+  align-self: flex-start;
+  display: grid;
+  gap: 4px;
+  width: 84%;
+  margin-top: -2px;
+}
+
+.replyButtonsInline {
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+}
+
+.replyButton {
+  padding: 8px 6px;
+  border-radius: 8px;
+  background: var(--wa-in);
+  color: var(--wa-button);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 13%);
+}
+
+.replyButtonChosen {
+  background: #e3f3fb;
+}
+
+.dateDivider {
+  align-self: center;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+  color: #54656f;
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 13%);
+}
+
+/* ---------- how it works ---------- */
+.steps {
+  display: grid;
+  gap: 14px;
+  counter-reset: step;
+}
+
+@media (min-width: 720px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.step {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.stepNum {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 800;
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cardBody {
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* ---------- features ---------- */
+.features {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 600px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+}
+
+.feature {
+  padding: 20px;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.featureIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.featureIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- demo band ---------- */
+.demoBand {
+  display: grid;
+  gap: 20px;
+  align-items: center;
+  padding: 28px 22px;
+  border-radius: 20px;
+  background: var(--brand);
+  color: #fff;
+}
+
+.demoBand .h2 {
+  color: #fff;
+}
+
+.demoBandText {
+  margin-top: 8px;
+  font-size: 16px;
+  color: rgb(255 255 255 / 88%);
+}
+
+.demoBand .btnPrimary {
+  background: #fff;
+  color: var(--brand-strong);
+}
+
+.demoBand .btnPrimary:hover {
+  background: var(--brand-soft);
+}
+
+@media (min-width: 720px) {
+  .demoBand {
+    grid-template-columns: 1fr auto;
+    padding: 40px 44px;
+  }
+}
+
+/* ---------- previews (chat + dashboard) ---------- */
+.previewGrid {
+  display: grid;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Grid items default to min-width:auto; let them shrink so wide content
+   (e.g. the tab strip) scrolls inside instead of widening the page. */
+.previewGrid > *,
+.heroGrid > * {
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .previewGrid {
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+  }
+}
+
+.previewLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.previewLabel span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 13px;
+}
+
+.figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.dash {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.dashTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dashClinic {
+  font-weight: 700;
+}
+
+.dashTabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+}
+
+.dashTab {
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.dashTabActive {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+}
+
+.dashStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.stat {
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dashListHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dayToggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dayToggle span {
+  padding: 3px 10px;
+  color: var(--muted);
+}
+
+.dayToggle .dayActive {
+  background: var(--brand);
+  color: #fff;
+}
+
+.appt {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.apptNew {
+  background: #f1faf5;
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.apptTime {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.apptWho {
+  min-width: 0;
+}
+
+.apptName {
+  display: block;
+  font-weight: 600;
+}
+
+.apptMeta {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badgeOk {
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
+.badgeCancel {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.badgeNew {
+  margin-left: 6px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  padding: 1px 6px;
+}
+
+/* ---------- pricing ---------- */
+.plans {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 860px) {
+  .plans {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+}
+
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.planPopular {
+  border: 2px solid var(--brand);
+  box-shadow: var(--shadow);
+}
+
+.popularTag {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.planName {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.planTagline {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.planPrice {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 16px 0 18px;
+}
+
+.planAmount {
+  font-size: 36px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.planPer {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.planList {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 15px;
+}
+
+.planList li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.planList svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  color: var(--brand);
+}
+
+.planCta {
+  margin-top: auto;
+}
+
+.pricingNote {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- FAQ ---------- */
+.faqList {
+  max-width: 760px;
+  margin-inline: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.faq {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 14px 16px;
+  font-weight: 650;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+
+.faq[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.faqAnswer {
+  padding: 0 16px 16px;
+  color: var(--ink-2);
+}
+
+/* ---------- final CTA + footer ---------- */
+.finalCta {
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.finalCta .ctaRow {
+  justify-content: center;
+}
+
+.finalCta .trialNote {
+  justify-content: center;
+}
+
+.footer {
+  padding-block: 32px calc(32px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.footerInner {
+  display: grid;
+  gap: 16px;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.footerLinks a {
+  text-decoration: none;
+  color: var(--ink-2);
+}
+
+.footerLinks a:hover {
+  color: var(--brand);
+}
+
+.footerLegal {
+  font-size: 12px;
+}
+
+@media (min-width: 720px) {
+  .footerInner {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+/* ---------- sticky mobile CTA ---------- */
+.sticky {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 30;
+  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+  background: rgb(255 255 255 / 96%);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 16px rgb(17 32 27 / 8%);
+  transform: translateY(110%);
+  transition: transform 0.25s ease-out;
+}
+
+.stickyVisible {
+  transform: none;
+}
+
+.stickyInner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 8px;
+}
+
+.stickyInner .btn {
+  min-height: 48px;
+  padding-inline: 10px;
+  font-size: 15px;
+}
+
+@media (min-width: 900px) {
+  .sticky {
+    display: none;
+  }
+}
+
+/* Keep the footer clear of the sticky bar on phones. */
+@media (max-width: 899px) {
+  .page {
+    padding-bottom: 76px;
+  }
+}
