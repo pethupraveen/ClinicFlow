@@ -16,11 +16,15 @@ export function DemoConversion({
   seconds,
   onClose,
   onRestart,
+  onTrialCta,
+  onBookDemoCta,
 }: {
   trialDays: number;
   seconds: number | null;
   onClose: () => void;
   onRestart: () => void;
+  onTrialCta: () => void;
+  onBookDemoCta: () => void;
 }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -44,10 +48,10 @@ export function DemoConversion({
       </p>
       <p className={s.sheetAsk}>Want this for your clinic?</p>
       <div className={s.sheetActions}>
-        <Link href={TRIAL_HREF} className={`${ls.btn} ${ls.btnPrimary}`}>
+        <Link href={TRIAL_HREF} className={`${ls.btn} ${ls.btnPrimary}`} onClick={onTrialCta}>
           Start My {trialDays}-Day Free Trial
         </Link>
-        <Link href={ROUTES.bookDemo} className={`${ls.btn} ${ls.btnSecondary}`}>
+        <Link href={ROUTES.bookDemo} className={`${ls.btn} ${ls.btnSecondary}`} onClick={onBookDemoCta}>
           Book a Demo
         </Link>
         <button type="button" className={s.restart} onClick={onRestart}>
@@ -60,15 +64,25 @@ export function DemoConversion({
 }
 
 /** Inline version of the same CTAs, left in the dashboard after the sheet is closed. */
-export function DemoConversionBanner({ trialDays, onRestart }: { trialDays: number; onRestart: () => void }) {
+export function DemoConversionBanner({
+  trialDays,
+  onRestart,
+  onTrialCta,
+  onBookDemoCta,
+}: {
+  trialDays: number;
+  onRestart: () => void;
+  onTrialCta: () => void;
+  onBookDemoCta: () => void;
+}) {
   return (
     <div className={s.banner}>
       <p>Want this for your clinic?</p>
       <div className={s.bannerActions}>
-        <Link href={TRIAL_HREF} className={`${ls.btn} ${ls.btnSmall}`}>
+        <Link href={TRIAL_HREF} className={`${ls.btn} ${ls.btnSmall}`} onClick={onTrialCta}>
           Start My {trialDays}-Day Free Trial
         </Link>
-        <Link href={ROUTES.bookDemo} className={`${ls.btn} ${ls.btnSmall} ${s.bannerRestart}`}>
+        <Link href={ROUTES.bookDemo} className={`${ls.btn} ${ls.btnSmall} ${s.bannerRestart}`} onClick={onBookDemoCta}>
           Book a Demo
         </Link>
         <button type="button" className={`${s.restart} ${s.bannerRestart}`} onClick={onRestart}>

@@ -1,4 +1,5 @@
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { MarketingPageView } from "@/modules/analytics/components/MarketingPageView";
 import { getPublicPlans, getTrialPlan } from "@/modules/subscriptions/plans";
 import { getFaqs, type Faq } from "./content";
 import { Pricing } from "./components/Pricing";
@@ -51,6 +52,7 @@ export function LandingPage() {
 
   return (
     <div className={s.page}>
+      <MarketingPageView page="landing" />
       <script
         type="application/ld+json"
         // Escape "<" so no JSON string can close the script tag.

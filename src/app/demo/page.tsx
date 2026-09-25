@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MarketingPageView } from "@/modules/analytics/components/MarketingPageView";
 import { ROUTES } from "@/lib/site";
 import { DemoLoader } from "@/modules/demo/components/DemoLoader";
 import { LogoMark } from "@/modules/marketing/components/Sections";
@@ -18,6 +19,7 @@ export default function DemoPage() {
   const { trialDays } = getTrialPlan();
   return (
     <div className={s.page}>
+      <MarketingPageView page="demo" />
       <header className={s.topbar}>
         <div className={s.topbarInner}>
           <Link href={ROUTES.home} className={ls.logo} aria-label="ClinicFlow WhatsApp home">

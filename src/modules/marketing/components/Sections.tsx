@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES, SITE_NAME } from "@/lib/site";
+import { PrivacyNotice } from "@/modules/analytics/components/PrivacyNotice";
 import { FEATURES, HOW_IT_WORKS, type Faq, type FeatureIcon } from "../content";
 import { ChatMock, FULL_CHAT, HERO_CHAT } from "./ChatMock";
 import { DashboardMock } from "./DashboardMock";
@@ -294,6 +295,7 @@ export function Footer() {
             © {new Date().getFullYear()} {SITE_NAME}. WhatsApp is a trademark of Meta Platforms, Inc. ClinicFlow is
             not affiliated with Meta.
           </p>
+          <PrivacyNotice className={s.footerLegal} />
         </div>
         <nav className={s.footerLinks} aria-label="Footer">
           <a href="#how-it-works">How it works</a>

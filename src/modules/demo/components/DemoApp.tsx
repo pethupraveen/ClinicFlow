@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useDemoAnalytics } from "@/modules/analytics/useDemoAnalytics";
 import {
   STORAGE_KEY,
   hasBooking,
@@ -56,6 +57,8 @@ export default function DemoApp({ trialDays }: { trialDays: number }) {
   const [session, setSession] = useState(0);
   const [view, setView] = useState<View>(() => viewFor(state));
   const [sheetClosed, setSheetClosed] = useState(false);
+  const track = useDemoAnalytics();
+  const previousAnalyticsState = useRef(state.state);
 
   const send = useCallback((event: DemoEvent) => dispatch(event), []);
 
@@ -69,6 +72,15 @@ export default function DemoApp({ trialDays }: { trialDays: number }) {
   }, [state]);
 
   useEffect(() => {
+    if (state.state === previousAnalyticsState.current) return;
+    previousAnalyticsState.current = state.state;
+    if (state.state === "chooseDoctor") track("demo_booking_started");
+    if (state.state === "booked") track("demo_booking_confirmed");
+    if (state.state === "dashboard") track("demo_dashboard_viewed");
+    if (state.state === "conversion") track("demo_completed");
+  }, [state.state, track]);
+
+  useEffect(() => {
     if (state.state === "booked") {
       const t = setTimeout(showDashboard, TO_DASHBOARD_MS);
       return () => clearTimeout(t);
@@ -80,12 +92,13 @@ export default function DemoApp({ trialDays }: { trialDays: number }) {
   }, [state.state, send, showDashboard]);
 
   const restart = useCallback(() => {
+    track("demo_restarted");
     writeStorage(null);
     send({ type: "RESTART" });
     setSession((n) => n + 1);
     setSheetClosed(false);
     setView("chat");
-  }, [send]);
+  }, [send, track]);
 
   const closeSheet = useCallback(() => setSheetClosed(true), []);
 
@@ -134,13 +147,25 @@ export default function DemoApp({ trialDays }: { trialDays: number }) {
           <p className={s.paneLabel}>2 · What your clinic sees</p>
           <DemoDashboard booking={booking} />
           {state.state === "conversion" && sheetClosed && (
-            <DemoConversionBanner trialDays={trialDays} onRestart={restart} />
+            <DemoConversionBanner
+              trialDays={trialDays}
+              onRestart={restart}
+              onTrialCta={() => track("demo_trial_cta_clicked")}
+              onBookDemoCta={() => track("demo_book_demo_cta_clicked")}
+            />
           )}
         </section>
       </div>
 
       {state.state === "conversion" && !sheetClosed && (
-        <DemoConversion trialDays={trialDays} seconds={secondsToBook(state)} onClose={closeSheet} onRestart={restart} />
+        <DemoConversion
+          trialDays={trialDays}
+          seconds={secondsToBook(state)}
+          onClose={closeSheet}
+          onRestart={restart}
+          onTrialCta={() => track("demo_trial_cta_clicked")}
+          onBookDemoCta={() => track("demo_book_demo_cta_clicked")}
+        />
       )}
     </>
   );
