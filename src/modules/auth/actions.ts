@@ -71,9 +71,15 @@ export async function signupAction(_prev: FormState, formData: FormData): Promis
           return { ok: false, reason: "failed" };
         }
         if (!data.user || !data.session) {
-          // Confirm email is still on in Supabase, or the email is already taken.
-          console.error("Supabase signUp returned no session; check that Confirm email is off");
-          return { ok: false, reason: "exists" };
+          // Only happens when Supabase's Confirm email setting is on. A real
+          // new user was created (fake ones for taken emails have no
+          // identities), so remove it rather than leave an account with no clinic.
+          console.error("Supabase signUp returned no session: turn Confirm email off in Supabase Auth settings");
+          if (data.user && (data.user.identities?.length ?? 0) > 0) {
+            const { error: deleteError } = await adminClient().auth.admin.deleteUser(data.user.id);
+            if (deleteError) console.error("Deleting unconfirmed auth user failed", deleteError.message);
+          }
+          return { ok: false, reason: "failed" };
         }
         return { ok: true, userId: data.user.id };
       },
