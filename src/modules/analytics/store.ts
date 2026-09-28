@@ -24,8 +24,9 @@ let client: Sql | undefined;
 
 function database(): Sql {
   if (client) return client;
-  // POSTGRES_URL is Supabase's pooled (transaction mode) connection.
-  const connectionString = process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
+  // POSTGRES_URL is Supabase's pooled (transaction mode) connection; the
+  // STORAGE_ form is what the integration creates with its default prefix.
+  const connectionString = process.env.POSTGRES_URL ?? process.env.STORAGE_POSTGRES_URL ?? process.env.DATABASE_URL;
   if (!connectionString) throw new AnalyticsStoreUnavailable();
   // The transaction pooler does not support prepared statements.
   client = postgres(cleanConnectionString(connectionString), { prepare: false, max: 5, idle_timeout: 20 });

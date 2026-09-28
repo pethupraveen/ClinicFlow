@@ -38,7 +38,7 @@ The app is deployed on **Vercel**, which is connected to this repo: pushes to `m
 
 ## Database setup
 
-Install the Supabase integration from Vercel Marketplace and connect it to the `clinic-flow` project for Production, Preview and Development. Check that `POSTGRES_URL` and `POSTGRES_URL_NON_POOLING` appear with `npx vercel env ls production`. Then pull the variables and run the migrations once, as shown above. Redeploy after changing environment variables.
+Install the Supabase integration from Vercel Marketplace and connect it to the `clinic-flow` project for Production, Preview and Development. Check that `POSTGRES_URL` and `POSTGRES_URL_NON_POOLING` appear (or their `STORAGE_`-prefixed forms, which the app also reads) with `npx vercel env ls production`. Then pull the variables and run the migrations once, as shown above. Redeploy after changing environment variables.
 
 The app uses the pooled `POSTGRES_URL` (Supabase's transaction pooler, so prepared statements are off). Migrations use the direct `POSTGRES_URL_NON_POOLING`. Any other Postgres works through `DATABASE_URL`. Migration `0002` enables row-level security, so Supabase's public Data API can't read or write the analytics tables.
 

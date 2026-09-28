@@ -3,7 +3,12 @@ import { join } from "node:path";
 import postgres from "postgres";
 
 // Migrations need a direct (session) connection; fall back to the pooled one.
-const databaseUrl = process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
+const databaseUrl =
+  process.env.POSTGRES_URL_NON_POOLING ??
+  process.env.STORAGE_POSTGRES_URL_NON_POOLING ??
+  process.env.POSTGRES_URL ??
+  process.env.STORAGE_POSTGRES_URL ??
+  process.env.DATABASE_URL;
 if (!databaseUrl) {
   throw new Error("POSTGRES_URL_NON_POOLING is required. Connect Supabase in Vercel and pull the environment before running migrations.");
 }
