@@ -12,7 +12,7 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 4+ | Signup, 15-day trial, onboarding, subscriptions | Not started. `/signup` and `/book-demo` are placeholders |
 
 ## Stack
-Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Neon PostgreSQL through Vercel Marketplace.
+Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Supabase Postgres (via `postgres.js`) through Vercel Marketplace.
 
 ## Run
 
@@ -24,8 +24,9 @@ npm test                     # unit tests
 npm run lint
 npm run build && npm start   # production
 
-# Once DATABASE_URL is present (never commit it):
-npm run db:migrate
+# Once the Supabase variables are present (never commit them):
+npx vercel env pull .env.local
+node --env-file=.env.local scripts/migrate.mjs
 ```
 
 ## Deploy
@@ -37,7 +38,9 @@ The app is deployed on **Vercel**, which is connected to this repo: pushes to `m
 
 ## Database setup
 
-Create the Neon native integration through Vercel Marketplace and connect it to Production, Preview and Development. Verify the server-only `DATABASE_URL` variable appears in each environment, then run `npm run db:migrate` once against the production connection. Redeploy after changing environment variables.
+Install the Supabase integration from Vercel Marketplace and connect it to the `clinic-flow` project for Production, Preview and Development. Check that `POSTGRES_URL` and `POSTGRES_URL_NON_POOLING` appear with `npx vercel env ls production`. Then pull the variables and run the migrations once, as shown above. Redeploy after changing environment variables.
+
+The app uses the pooled `POSTGRES_URL` (Supabase's transaction pooler, so prepared statements are off). Migrations use the direct `POSTGRES_URL_NON_POOLING`. Any other Postgres works through `DATABASE_URL`. Migration `0002` enables row-level security, so Supabase's public Data API can't read or write the analytics tables.
 
 ## Layout
 
@@ -54,7 +57,7 @@ src/
     marketing/                landing sections, copy, pricing cards
     demo/                     demo state machine, fixtures, chat + dashboard UI (client-only)
     attribution/              UTM / referrer parsing (pure, tested)
-    analytics/                event whitelist, demo session security, Neon data access
+    analytics/                event whitelist, demo session security, Postgres data access
     subscriptions/            plan catalogue: prices, limits, trial length
 ```
 

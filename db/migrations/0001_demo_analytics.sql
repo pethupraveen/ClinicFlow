@@ -1,5 +1,5 @@
 -- Phase 3: pseudonymous marketing and demo analytics.
--- Run with `npm run db:migrate` after DATABASE_URL is available.
+-- Run with `npm run db:migrate` after the database connection is available.
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
   name text PRIMARY KEY,

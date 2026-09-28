@@ -1,34 +1,40 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 
-const databaseUrl = process.env.DATABASE_URL;
+// Migrations need a direct (session) connection; fall back to the pooled one.
+const databaseUrl = process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
 if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required. Add it to .env.local or Vercel before running migrations.");
+  throw new Error("POSTGRES_URL_NON_POOLING is required. Connect Supabase in Vercel and pull the environment before running migrations.");
+}
+
+// Drop Supabase-specific query parameters (`supa`, `pgbouncer`) that Postgres rejects.
+const url = new URL(databaseUrl);
+for (const key of [...url.searchParams.keys()]) {
+  if (key !== "sslmode") url.searchParams.delete(key);
 }
 
 const migrationDirectory = join(process.cwd(), "db", "migrations");
 const migrations = (await readdir(migrationDirectory)).filter((file) => file.endsWith(".sql")).sort();
-const sql = neon(databaseUrl);
+const sql = postgres(url.toString(), { prepare: false, max: 1, onnotice: () => {} });
 
-await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
-  name text PRIMARY KEY,
-  applied_at timestamptz NOT NULL DEFAULT now()
-)`;
+try {
+  await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
+    name text PRIMARY KEY,
+    applied_at timestamptz NOT NULL DEFAULT now()
+  )`;
 
-for (const name of migrations) {
-  const applied = await sql`SELECT 1 FROM schema_migrations WHERE name = ${name}`;
-  if (applied.length > 0) continue;
+  for (const name of migrations) {
+    const applied = await sql`SELECT 1 FROM schema_migrations WHERE name = ${name}`;
+    if (applied.length > 0) continue;
 
-  const content = await readFile(join(migrationDirectory, name), "utf8");
-  const statements = content
-    .split(/;\s*(?:\r?\n|$)/)
-    .map((statement) => statement.trim())
-    .filter(Boolean);
-
-  for (const statement of statements) {
-    await sql.query(statement);
+    const content = await readFile(join(migrationDirectory, name), "utf8");
+    await sql.begin(async (tx) => {
+      await tx.unsafe(content);
+      await tx`INSERT INTO schema_migrations (name) VALUES (${name})`;
+    });
+    console.log(`Applied ${name}`);
   }
-  await sql`INSERT INTO schema_migrations (name) VALUES (${name})`;
-  console.log(`Applied ${name}`);
+} finally {
+  await sql.end();
 }
