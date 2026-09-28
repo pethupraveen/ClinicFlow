@@ -1,37 +1,9 @@
 import "server-only";
 
-import postgres, { type Sql } from "postgres";
+import { database } from "@/lib/db";
 import type { DemoEventName, MarketingPage } from "./events";
 
-export class AnalyticsStoreUnavailable extends Error {
-  constructor() {
-    super("Analytics storage is not configured.");
-  }
-}
-
-// Supabase's Vercel integration appends non-Postgres query parameters
-// (e.g. `supa`, `pgbouncer`) that postgres.js would forward to the server as
-// startup settings, so keep only `sslmode`.
-function cleanConnectionString(raw: string): string {
-  const url = new URL(raw);
-  for (const key of [...url.searchParams.keys()]) {
-    if (key !== "sslmode") url.searchParams.delete(key);
-  }
-  return url.toString();
-}
-
-let client: Sql | undefined;
-
-function database(): Sql {
-  if (client) return client;
-  // POSTGRES_URL is Supabase's pooled (transaction mode) connection; the
-  // STORAGE_ form is what the integration creates with its default prefix.
-  const connectionString = process.env.POSTGRES_URL ?? process.env.STORAGE_POSTGRES_URL ?? process.env.DATABASE_URL;
-  if (!connectionString) throw new AnalyticsStoreUnavailable();
-  // The transaction pooler does not support prepared statements.
-  client = postgres(cleanConnectionString(connectionString), { prepare: false, max: 5, idle_timeout: 20 });
-  return client;
-}
+export { DatabaseUnavailable as AnalyticsStoreUnavailable } from "@/lib/db";
 
 type SessionRow = { id: string };
 type CountRow = { count: number | string };

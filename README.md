@@ -9,7 +9,8 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 1 | Public landing page, SEO, UTM attribution | Done |
 | 2 | Interactive demo at `/demo`: WhatsApp booking → simulated dashboard → trial CTA | Done |
 | 3 | Privacy-safe demo analytics | Done |
-| 4+ | Signup, 15-day trial, onboarding, subscriptions | Not started. `/signup` and `/book-demo` are placeholders |
+| 4 | Signup, login, email verification, password reset, `/app` home | Built; needs the setup below before it works live |
+| 5+ | 15-day trial, onboarding, subscriptions | Not started. `/book-demo` is a placeholder |
 
 ## Stack
 Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Supabase Postgres (via `postgres.js`) through Vercel Marketplace.
@@ -42,6 +43,19 @@ Install the Supabase integration from Vercel Marketplace and connect it to the `
 
 The app uses the pooled `POSTGRES_URL` (Supabase's transaction pooler, so prepared statements are off). Migrations use the direct `POSTGRES_URL_NON_POOLING`. Any other Postgres works through `DATABASE_URL`. Migration `0002` enables row-level security, so Supabase's public Data API can't read or write the analytics tables.
 
+## Authentication setup (Phase 4)
+
+Accounts use **Supabase Auth**; only the server talks to it, so the browser never gets a Supabase key and auth cookies are `HttpOnly`. Our own tables (`profiles`, `businesses`, `business_members`, verification tokens, rate limits, audit log) come from migration `0003`.
+
+In Supabase:
+- Turn **Confirm email off**. Clinics get in straight away and verify later through our own link.
+- Set the Site URL and the redirect URLs.
+- Point the "Reset password" email template at `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`.
+- Send email through Resend's SMTP.
+- Raise the sign-in and sign-up rate limits, since the app enforces its own per-user limits.
+
+In Vercel, add `RESEND_API_KEY`, `EMAIL_FROM` and `AUTH_RATE_LIMIT_SALT`. Every variable is read with or without the `STORAGE_` prefix.
+
 ## Layout
 
 ```
@@ -49,7 +63,10 @@ src/
   app/                        routes only (thin)
     (marketing)/page.tsx      landing page  /
     demo/page.tsx             interactive demo  /demo
-    signup/ book-demo/        placeholders (noindex)
+    (auth)/                   signup, login, forgot/reset password, verify email (noindex, per-request)
+    auth/confirm/route.ts     password-recovery link → session
+    app/                      signed-in clinic app (guarded)
+    book-demo/                placeholder (noindex)
     robots.ts sitemap.ts opengraph-image.tsx twitter-image.tsx icon.svg
   proxy.ts                    sets first/last-touch attribution cookies
   lib/site.ts                 site URL, name, description, routes
@@ -58,6 +75,7 @@ src/
     demo/                     demo state machine, fixtures, chat + dashboard UI (client-only)
     attribution/              UTM / referrer parsing (pure, tested)
     analytics/                event whitelist, demo session security, Postgres data access
+    auth/                     Supabase Auth clients, server actions, guards, rate limits, CSP, leaked-password check
     subscriptions/            plan catalogue: prices, limits, trial length
 ```
 

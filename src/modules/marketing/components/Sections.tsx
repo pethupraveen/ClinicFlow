@@ -68,6 +68,7 @@ export function Header({ trialDays }: { trialDays: number }) {
           <a href="#features">Features</a>
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
+          <Link href={ROUTES.login}>Log in</Link>
         </nav>
         <Link href={ROUTES.signup} className={`${s.btn} ${s.btnPrimary} ${s.btnSmall}`}>
           <span className="visually-hidden">Start {trialDays}-day </span>Free trial
@@ -303,6 +304,7 @@ export function Footer() {
           <a href="#faq">FAQ</a>
           <Link href={ROUTES.demo}>Live demo</Link>
           <Link href={ROUTES.signup}>Free trial</Link>
+          <Link href={ROUTES.login}>Log in</Link>
         </nav>
       </div>
     </footer>

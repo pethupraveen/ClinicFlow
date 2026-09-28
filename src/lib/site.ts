@@ -29,5 +29,7 @@ export const ROUTES = {
   home: "/",
   demo: "/demo",
   signup: "/signup",
+  login: "/login",
+  app: "/app",
   bookDemo: "/book-demo",
 } as const;
