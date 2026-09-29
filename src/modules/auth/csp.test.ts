@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { readEnv } from "@/lib/env";
 import { buildCsp, newNonce, usesNonceCsp } from "./csp";
-import { hashToken, keyedHash, newPublicId, newToken } from "./tokens";
+import { keyedHash, newPublicId } from "./tokens";
 
 describe("nonce CSP scope", () => {
   it("covers auth pages and the app, not marketing or demo", () => {
-    for (const path of ["/app", "/app/billing", "/signup", "/login", "/reset-password", "/verify-email", "/auth/confirm"]) {
+    for (const path of ["/app", "/app/billing", "/signup", "/login", "/welcome", "/auth/google", "/auth/callback"]) {
       expect(usesNonceCsp(path)).toBe(true);
     }
     for (const path of ["/", "/demo", "/book-demo", "/application", "/signups"]) {
@@ -25,12 +25,6 @@ describe("nonce CSP scope", () => {
 });
 
 describe("tokens", () => {
-  it("creates 256-bit tokens and stores only their hash", () => {
-    const token = newToken();
-    expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);
-    expect(hashToken(token)).toMatch(/^[a-f0-9]{64}$/);
-  });
-
   it("keys hashes with a salt", () => {
     expect(keyedHash("203.0.113.9", "a")).not.toBe(keyedHash("203.0.113.9", "b"));
   });

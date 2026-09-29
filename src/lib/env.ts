@@ -25,7 +25,5 @@ export const ENV = {
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
   ],
   supabaseServiceKey: ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
-  resendApiKey: ["RESEND_API_KEY"],
-  emailFrom: ["EMAIL_FROM"],
   rateLimitSalt: ["AUTH_RATE_LIMIT_SALT"],
 } as const;

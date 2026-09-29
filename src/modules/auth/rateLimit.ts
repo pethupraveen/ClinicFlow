@@ -10,13 +10,8 @@ import { keyedHash } from "./tokens";
  * per-IP limits cannot tell visitors apart. These limits are ours.
  */
 export const LIMITS = {
-  signupPerIp: { bucket: "signup:ip", max: 5, windowSeconds: 60 * 60 },
-  loginPerIp: { bucket: "login:ip", max: 10, windowSeconds: 15 * 60 },
-  loginPerEmail: { bucket: "login:email", max: 10, windowSeconds: 15 * 60 },
-  forgotPerEmail: { bucket: "forgot:email", max: 3, windowSeconds: 60 * 60 },
-  forgotPerIp: { bucket: "forgot:ip", max: 10, windowSeconds: 60 * 60 },
-  resendVerifyPerUser: { bucket: "verify-resend:user", max: 3, windowSeconds: 60 * 60 },
-  confirmPerIp: { bucket: "verify-confirm:ip", max: 20, windowSeconds: 60 * 60 },
+  googleStartPerIp: { bucket: "google-start:ip", max: 30, windowSeconds: 15 * 60 },
+  createClinicPerIp: { bucket: "create-clinic:ip", max: 5, windowSeconds: 60 * 60 },
 } as const;
 
 export type Limit = (typeof LIMITS)[keyof typeof LIMITS];

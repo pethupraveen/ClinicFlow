@@ -5,7 +5,6 @@ describe("safeNextPath", () => {
   it("keeps app paths and their query", () => {
     expect(safeNextPath("/app")).toBe("/app");
     expect(safeNextPath("/app/billing?tab=plans")).toBe("/app/billing?tab=plans");
-    expect(safeNextPath("/reset-password")).toBe("/reset-password");
   });
 
   it.each([
@@ -15,6 +14,8 @@ describe("safeNextPath", () => {
     ["\\\\evil.example"],
     ["javascript:alert(1)"],
     ["/login"],
+    ["/welcome"],
+    ["/reset-password"],
     ["/application"],
     ["/app/../admin"],
     [""],
@@ -26,6 +27,6 @@ describe("safeNextPath", () => {
   });
 
   it("uses the given fallback", () => {
-    expect(safeNextPath("https://evil.example", "/reset-password")).toBe("/reset-password");
+    expect(safeNextPath("https://evil.example", "/app/settings")).toBe("/app/settings");
   });
 });

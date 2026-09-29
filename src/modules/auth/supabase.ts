@@ -1,9 +1,8 @@
 import "server-only";
 
 import { createServerClient } from "@supabase/ssr";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
-import { ENV, readEnv } from "@/lib/env";
 import { AUTH_COOKIE_OPTIONS, authConfig } from "./config";
 
 export { authConfig } from "./config";
@@ -36,12 +35,4 @@ export async function authClient(): Promise<SupabaseClient> {
       },
     },
   });
-}
-
-/** Service-role client for admin operations. Never bound to a user's cookies. */
-export function adminClient(): SupabaseClient {
-  const url = readEnv(ENV.supabaseUrl);
-  const serviceKey = readEnv(ENV.supabaseServiceKey);
-  if (!url || !serviceKey) throw new AuthNotConfigured();
-  return createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
 }

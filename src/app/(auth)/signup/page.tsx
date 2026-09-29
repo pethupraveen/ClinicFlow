@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthShell } from "@/modules/auth/components/AuthShell";
-import { SignupForm } from "@/modules/auth/components/AuthForms";
+import { GoogleButton } from "@/modules/auth/components/GoogleButton";
 import { getSessionUser } from "@/modules/auth/guards";
 import { getTrialPlan } from "@/modules/subscriptions/plans";
 
@@ -14,14 +14,14 @@ export default async function SignupPage() {
   return (
     <AuthShell
       title={`Start your ${trialDays}-day free trial`}
-      subtitle="No credit card required. Set up your clinic in minutes."
+      subtitle="No credit card required. Sign up with your Google account and set up your clinic in minutes."
       footer={
         <>
           Already have an account? <Link href="/login">Log in</Link>
         </>
       }
     >
-      <SignupForm />
+      <GoogleButton label="Sign up with Google" />
     </AuthShell>
   );
 }

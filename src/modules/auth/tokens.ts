@@ -1,15 +1,4 @@
-import { createHash, createHmac, randomBytes } from "node:crypto";
-
-export const VERIFY_EMAIL_TTL_SECONDS = 48 * 60 * 60;
-
-/** 256-bit random token; only its hash is ever stored. */
-export function newToken(): string {
-  return randomBytes(32).toString("base64url");
-}
-
-export function hashToken(token: string): string {
-  return createHash("sha256").update(token).digest("hex");
-}
+import { createHmac, randomBytes } from "node:crypto";
 
 /** Keyed hash for values such as IP addresses that must not be reversible by brute force. */
 export function keyedHash(value: string, salt: string): string {

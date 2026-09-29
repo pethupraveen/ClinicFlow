@@ -1,4 +1,5 @@
 export const APP_HOME = "/app";
+export const WELCOME = "/welcome";
 
 /**
  * Accepts only same-site paths inside the app for post-login redirects, so a
@@ -14,6 +15,6 @@ export function safeNextPath(value: unknown, fallback: string = APP_HOME): strin
     return fallback;
   }
   if (url.origin !== "https://placeholder.invalid") return fallback;
-  const allowed = url.pathname === APP_HOME || url.pathname.startsWith(`${APP_HOME}/`) || url.pathname === "/reset-password";
+  const allowed = url.pathname === APP_HOME || url.pathname.startsWith(`${APP_HOME}/`);
   return allowed ? `${url.pathname}${url.search}` : fallback;
 }

@@ -9,7 +9,7 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 1 | Public landing page, SEO, UTM attribution | Done |
 | 2 | Interactive demo at `/demo`: WhatsApp booking → simulated dashboard → trial CTA | Done |
 | 3 | Privacy-safe demo analytics | Done |
-| 4 | Signup, login, email verification, password reset, `/app` home | Built; needs the setup below before it works live |
+| 4 | Sign in with Google, first-time clinic setup, `/app` home | Built; needs the Google setup below before it works live |
 | 5+ | 15-day trial, onboarding, subscriptions | Not started. `/book-demo` is a placeholder |
 
 ## Stack
@@ -45,16 +45,18 @@ The app uses the pooled `POSTGRES_URL` (Supabase's transaction pooler, so prepar
 
 ## Authentication setup (Phase 4)
 
-Accounts use **Supabase Auth**; only the server talks to it, so the browser never gets a Supabase key and auth cookies are `HttpOnly`. Our own tables (`profiles`, `businesses`, `business_members`, verification tokens, rate limits, audit log) come from migration `0003`.
+Clinics sign in with **Google only**, through Supabase Auth. Only the server talks to Supabase, so the browser never gets a Supabase key and auth cookies are `HttpOnly`. The first sign-in asks for the clinic name at `/welcome`. Our tables (`profiles`, `businesses`, `business_members`, rate limits, audit log) come from migration `0003`.
 
-In Supabase:
-- Turn **Confirm email off**. Clinics get in straight away and verify later through our own link.
-- Set the Site URL and the redirect URLs.
-- Point the "Reset password" email template at `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`.
-- Send email through Resend's SMTP.
-- Raise the sign-in and sign-up rate limits, since the app enforces its own per-user limits.
+**Google Cloud Console**
+- Create an OAuth client of type *Web application*.
+- Set its authorized redirect URI to `https://<project-ref>.supabase.co/auth/v1/callback`.
 
-In Vercel, add `RESEND_API_KEY`, `EMAIL_FROM` and `AUTH_RATE_LIMIT_SALT`. Every variable is read with or without the `STORAGE_` prefix.
+**Supabase → Authentication**
+- Enable the **Google** provider with that client ID and secret.
+- Under URL Configuration, set the Site URL to the production URL.
+- Add `https://<production-domain>/auth/callback` and `http://localhost:3000/auth/callback` to the redirect URLs.
+
+Every variable is read with or without the `STORAGE_` prefix. `AUTH_RATE_LIMIT_SALT` is optional and falls back to the Supabase service key.
 
 ## Layout
 
@@ -63,8 +65,8 @@ src/
   app/                        routes only (thin)
     (marketing)/page.tsx      landing page  /
     demo/page.tsx             interactive demo  /demo
-    (auth)/                   signup, login, forgot/reset password, verify email (noindex, per-request)
-    auth/confirm/route.ts     password-recovery link → session
+    (auth)/                   signup, login (Google), welcome = first-time clinic setup (noindex, per-request)
+    auth/google, auth/callback  start Google sign-in / exchange the code for a session
     app/                      signed-in clinic app (guarded)
     book-demo/                placeholder (noindex)
     robots.ts sitemap.ts opengraph-image.tsx twitter-image.tsx icon.svg
@@ -75,7 +77,7 @@ src/
     demo/                     demo state machine, fixtures, chat + dashboard UI (client-only)
     attribution/              UTM / referrer parsing (pure, tested)
     analytics/                event whitelist, demo session security, Postgres data access
-    auth/                     Supabase Auth clients, server actions, guards, rate limits, CSP, leaked-password check
+    auth/                     Supabase Auth client, clinic creation, guards, rate limits, CSP
     subscriptions/            plan catalogue: prices, limits, trial length
 ```
 
