@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Touch } from "@/modules/attribution/attribution";
 import { database } from "@/lib/db";
+import { recordProductEvent } from "@/modules/onboarding/events";
 import { DEFAULT_TIME_ZONE } from "@/modules/trial/dates";
 import { createTrialSubscription } from "@/modules/trial/store";
 import { newPublicId } from "./tokens";
@@ -18,8 +19,8 @@ export interface Membership {
 
 /**
  * Writes everything a new clinic owner owns in one transaction: profile,
- * clinic, OWNER membership, TRIAL subscription, attribution snapshot and the
- * audit entry.
+ * clinic, OWNER membership, TRIAL subscription, onboarding row, attribution
+ * snapshot, the audit entry and the clinic_created product event.
  * Returns false if this user already has a profile (a double submit).
  */
 export async function createAccountRecords(input: {
@@ -57,6 +58,8 @@ export async function createAccountRecords(input: {
       timeZone: DEFAULT_TIME_ZONE,
       now: new Date(),
     });
+    await tx`INSERT INTO business_onboarding (business_id) VALUES (${business.id}::uuid)`;
+    await recordProductEvent(tx, { businessId: business.id, userId: input.userId, name: "clinic_created" });
     await tx`
       INSERT INTO audit_logs (actor_type, actor_user_id, business_id, action, target_type, target_public_id, ip_hash)
       VALUES ('USER', ${input.userId}::uuid, ${business.id}::uuid, 'auth.signup', 'business', ${business.public_id}, ${input.ipHash})

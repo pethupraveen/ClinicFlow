@@ -10,8 +10,9 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 2 | Interactive demo at `/demo`: WhatsApp booking → simulated dashboard → trial CTA | Done |
 | 3 | Privacy-safe demo analytics | Done |
 | 4 | Sign in with Google, first-time clinic setup, `/app` home | Done |
-| 5 | 15-day TRIAL subscription created with each clinic; daily expiry job | Built |
-| 6+ | Onboarding, trial dashboard, usage, subscriptions | Not started. `/book-demo` is a placeholder |
+| 5 | 15-day TRIAL subscription created with each clinic; daily expiry job | Done |
+| 6a | Onboarding wizard `/app/onboarding/1..7`: clinic info, doctors, working hours, FAQ, setup progress | Built |
+| 6b, 6c, 7+ | Booking bot + test chat, WhatsApp + Go Live, trial dashboard, usage, subscriptions | Not started. `/book-demo` is a placeholder |
 
 ## Stack
 Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Supabase Postgres (via `postgres.js`) through Vercel Marketplace.
@@ -83,6 +84,7 @@ src/
     attribution/              UTM / referrer parsing (pure, tested)
     analytics/                event whitelist, demo session security, Postgres data access
     auth/                     Supabase Auth client, clinic creation, guards, rate limits, CSP
+    onboarding/               wizard steps, derived progress, weekly-hours validation, clinic/doctor/FAQ store, product events
     trial/                    trial dates, effectiveStatus, subscription store, expiry job auth
     subscriptions/            plan catalogue: prices, limits, trial length
 ```

@@ -6,9 +6,10 @@ export function Field({
   name,
   error,
   hint,
+  idPrefix = "field",
   ...input
-}: InputHTMLAttributes<HTMLInputElement> & { label: string; name: string; error?: string; hint?: string }) {
-  const id = `field-${name}`;
+}: InputHTMLAttributes<HTMLInputElement> & { label: string; name: string; error?: string; hint?: string; idPrefix?: string }) {
+  const id = `${idPrefix}-${name}`;
   const describedBy = [error ? `${id}-error` : null, hint ? `${id}-hint` : null].filter(Boolean).join(" ") || undefined;
   return (
     <div className={s.field}>
