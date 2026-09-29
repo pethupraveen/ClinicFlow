@@ -9,8 +9,9 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 1 | Public landing page, SEO, UTM attribution | Done |
 | 2 | Interactive demo at `/demo`: WhatsApp booking → simulated dashboard → trial CTA | Done |
 | 3 | Privacy-safe demo analytics | Done |
-| 4 | Sign in with Google, first-time clinic setup, `/app` home | Built; needs the Google setup below before it works live |
-| 5+ | 15-day trial, onboarding, subscriptions | Not started. `/book-demo` is a placeholder |
+| 4 | Sign in with Google, first-time clinic setup, `/app` home | Done |
+| 5 | 15-day TRIAL subscription created with each clinic; daily expiry job | Built |
+| 6+ | Onboarding, trial dashboard, usage, subscriptions | Not started. `/book-demo` is a placeholder |
 
 ## Stack
 Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Supabase Postgres (via `postgres.js`) through Vercel Marketplace.
@@ -58,6 +59,10 @@ Clinics sign in with **Google only**, through Supabase Auth. Only the server tal
 
 Every variable is read with or without the `STORAGE_` prefix. `AUTH_RATE_LIMIT_SALT` is optional and falls back to the Supabase service key.
 
+## Trials (Phase 5)
+
+Every clinic gets a TRIAL subscription in the same transaction that creates it. Signup day is day 0, and the trial ends at midnight at the start of day 15 in the clinic's time zone (`businesses.time_zone`, default `Asia/Kolkata`). The app treats a trial as expired from that instant (`effectiveStatus`). A daily Vercel Cron job (`vercel.json`, 19:00 UTC ≈ 00:30 IST) calls `/api/cron/expire-trials` to save the expiry and log `TRIAL_EXPIRED`. Set `CRON_SECRET` in Vercel: the endpoint rejects any request without `Authorization: Bearer $CRON_SECRET`.
+
 ## Layout
 
 ```
@@ -78,6 +83,7 @@ src/
     attribution/              UTM / referrer parsing (pure, tested)
     analytics/                event whitelist, demo session security, Postgres data access
     auth/                     Supabase Auth client, clinic creation, guards, rate limits, CSP
+    trial/                    trial dates, effectiveStatus, subscription store, expiry job auth
     subscriptions/            plan catalogue: prices, limits, trial length
 ```
 

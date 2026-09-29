@@ -2,6 +2,8 @@ import "server-only";
 
 import type { Touch } from "@/modules/attribution/attribution";
 import { database } from "@/lib/db";
+import { DEFAULT_TIME_ZONE } from "@/modules/trial/dates";
+import { createTrialSubscription } from "@/modules/trial/store";
 import { newPublicId } from "./tokens";
 
 export type Role = "OWNER" | "ADMIN" | "RECEPTIONIST";
@@ -16,7 +18,8 @@ export interface Membership {
 
 /**
  * Writes everything a new clinic owner owns in one transaction: profile,
- * clinic, OWNER membership, attribution snapshot and the audit entry.
+ * clinic, OWNER membership, TRIAL subscription, attribution snapshot and the
+ * audit entry.
  * Returns false if this user already has a profile (a double submit).
  */
 export async function createAccountRecords(input: {
@@ -39,14 +42,21 @@ export async function createAccountRecords(input: {
     `;
     if (inserted.length === 0) return false;
     const [business] = await tx<{ id: string; public_id: string }[]>`
-      INSERT INTO businesses (public_id, name, acq_visitor_id, signup_attribution)
-      VALUES (${newPublicId("c")}, ${input.clinicName}, ${input.visitorId}::uuid, ${JSON.stringify(attribution)}::jsonb)
+      INSERT INTO businesses (public_id, name, time_zone, acq_visitor_id, signup_attribution)
+      VALUES (${newPublicId("c")}, ${input.clinicName}, ${DEFAULT_TIME_ZONE}, ${input.visitorId}::uuid,
+              ${JSON.stringify(attribution)}::jsonb)
       RETURNING id, public_id
     `;
     await tx`
       INSERT INTO business_members (business_id, user_id, role)
       VALUES (${business.id}::uuid, ${input.userId}::uuid, 'OWNER')
     `;
+    await createTrialSubscription(tx, {
+      businessId: business.id,
+      userId: input.userId,
+      timeZone: DEFAULT_TIME_ZONE,
+      now: new Date(),
+    });
     await tx`
       INSERT INTO audit_logs (actor_type, actor_user_id, business_id, action, target_type, target_public_id, ip_hash)
       VALUES ('USER', ${input.userId}::uuid, ${business.id}::uuid, 'auth.signup', 'business', ${business.public_id}, ${input.ipHash})
