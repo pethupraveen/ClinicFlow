@@ -2,6 +2,7 @@ import "server-only";
 
 import { database } from "@/lib/db";
 import { newPublicId } from "@/modules/auth/tokens";
+import { hasWhatsAppRoute } from "@/modules/whatsapp/store";
 import { recordProductEvent } from "./events";
 import { trimSeconds, type HoursRange } from "./schedule";
 import type { OnboardingFacts } from "./steps";
@@ -39,6 +40,7 @@ export async function getOnboardingFacts(businessId: string, emailVerified: bool
     faqs: number;
     faq_skipped: boolean;
     bot_tested: boolean;
+    is_live: boolean;
   }[]>`
     SELECT
       (coalesce(b.phone, '') <> '' AND coalesce(b.address, '') <> '' AND coalesce(b.city, '') <> '') AS clinic_ok,
@@ -47,7 +49,8 @@ export async function getOnboardingFacts(businessId: string, emailVerified: bool
          WHERE d.business_id = b.id AND d.archived_at IS NULL) AS doctors_with_hours,
       (SELECT count(*)::int FROM faqs f WHERE f.business_id = b.id) AS faqs,
       (o.faq_skipped_at IS NOT NULL) AS faq_skipped,
-      (o.bot_tested_at IS NOT NULL) AS bot_tested
+      (o.bot_tested_at IS NOT NULL) AS bot_tested,
+      (b.lifecycle_status = 'LIVE') AS is_live
     FROM businesses b
     LEFT JOIN business_onboarding o ON o.business_id = b.id
     WHERE b.id = ${businessId}::uuid
@@ -59,8 +62,9 @@ export async function getOnboardingFacts(businessId: string, emailVerified: bool
     faqCount: row?.faqs ?? 0,
     faqSkipped: row?.faq_skipped ?? false,
     emailVerified,
-    whatsappConnected: false, // Phase 6c
+    whatsappConnected: await hasWhatsAppRoute(businessId),
     botTested: row?.bot_tested ?? false,
+    isLive: row?.is_live ?? false,
   };
 }
 

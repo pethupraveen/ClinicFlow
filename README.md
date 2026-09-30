@@ -12,8 +12,9 @@ A WhatsApp receptionist for small clinics: appointment booking, FAQs, reminders 
 | 4 | Sign in with Google, first-time clinic setup, `/app` home | Done |
 | 5 | 15-day TRIAL subscription created with each clinic; daily expiry job | Done |
 | 6a | Onboarding wizard `/app/onboarding/1..7`: clinic info, doctors, working hours, FAQ, setup progress | Done |
-| 6b | Booking bot engine, in-app test chat (step 6), `/app/appointments` | Built |
-| 6c, 7+ | WhatsApp + Go Live, trial dashboard, usage, subscriptions | Not started. `/book-demo` is a placeholder |
+| 6b | Booking bot engine, in-app test chat (step 6), `/app/appointments` | Done |
+| 6c | WhatsApp: shared number + clinic link/QR, staff-connected own numbers, signed webhook, Go Live/Pause | Built |
+| 7+ | Trial dashboard, usage, subscriptions | Not started. `/book-demo` is a placeholder |
 
 ## Stack
 Next.js 16 (App Router, Turbopack), React 19, TypeScript, Vitest, and Supabase Postgres (via `postgres.js`) through Vercel Marketplace.
@@ -65,6 +66,10 @@ Every variable is read with or without the `STORAGE_` prefix. `AUTH_RATE_LIMIT_S
 
 Every clinic gets a TRIAL subscription in the same transaction that creates it. Signup day is day 0, and the trial ends at midnight at the start of day 15 in the clinic's time zone (`businesses.time_zone`, default `Asia/Kolkata`). The app treats a trial as expired from that instant (`effectiveStatus`). A daily Vercel Cron job (`vercel.json`, 19:00 UTC ≈ 00:30 IST) calls `/api/cron/expire-trials` to save the expiry and log `TRIAL_EXPIRED`. Set `CRON_SECRET` in Vercel: the endpoint rejects any request without `Authorization: Bearer $CRON_SECRET`.
 
+## WhatsApp (Phase 6c)
+
+Patients message either the **shared ClinicFlow number** (each clinic's link or QR pre-fills its code, e.g. `Hi C-7K2M9`) or a clinic's **own number**, which ClinicFlow staff connect at `/platform/whatsapp`. Meta calls `/api/webhooks/whatsapp`, which verifies `X-Hub-Signature-256`, processes each message ID once, routes it to the clinic, and applies the Go Live / trial gate before the booking bot runs. Setup, including the Vercel variables, is described in the Phase 6c Meta setup guide.
+
 ## Layout
 
 ```
@@ -85,6 +90,8 @@ src/
     attribution/              UTM / referrer parsing (pure, tested)
     analytics/                event whitelist, demo session security, Postgres data access
     auth/                     Supabase Auth client, clinic creation, guards, rate limits, CSP
+    whatsapp/                 Cloud API webhook parsing, signatures, token encryption, routing (shared number codes / own numbers), Go Live gate
+    platform/                 staff guard (CLINICFLOW_STAFF_EMAILS) for /platform
     bot/                      booking bot: pure engine + slots, store, service shared by test chat and (6c) WhatsApp
     onboarding/               wizard steps, derived progress, weekly-hours validation, clinic/doctor/FAQ store, product events
     trial/                    trial dates, effectiveStatus, subscription store, expiry job auth

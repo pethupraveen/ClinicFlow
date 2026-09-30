@@ -12,6 +12,8 @@ import { ClinicInfoForm, DoctorForm, FaqForm, ScheduleEditor } from "@/modules/o
 import { summarizeHours } from "@/modules/onboarding/schedule";
 import { computeProgress, stepByNumber } from "@/modules/onboarding/steps";
 import { getClinicInfo, getOnboardingFacts, listDoctors, listFaqs } from "@/modules/onboarding/store";
+import { GoLiveStep, WhatsAppStep } from "@/modules/whatsapp/components/Steps";
+import { clinicWhatsApp } from "@/modules/whatsapp/store";
 
 export const metadata: Metadata = { title: "Set up your clinic" };
 
@@ -138,6 +140,24 @@ export default async function OnboardingStepPage({ params, searchParams }: PageP
               </form>
             ) : null}
           </div>
+        </>
+      );
+      break;
+    }
+    case "whatsapp": {
+      body = (
+        <>
+          <WhatsAppStep wa={await clinicWhatsApp(businessId)} />
+          <Footer next={6} nextLabel="Continue to test your bot" />
+        </>
+      );
+      break;
+    }
+    case "golive": {
+      body = (
+        <>
+          <GoLiveStep wa={await clinicWhatsApp(businessId)} progress={progress} emailVerified={membership.emailVerified} />
+          <Footer />
         </>
       );
       break;

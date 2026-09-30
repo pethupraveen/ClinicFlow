@@ -13,6 +13,10 @@ export const PRODUCT_EVENTS = [
   "appointment_booked",
   "appointment_cancelled",
   "bot_tested",
+  "whatsapp_setup_requested",
+  "whatsapp_connected",
+  "went_live",
+  "bot_paused",
 ] as const;
 
 export type ProductEvent = (typeof PRODUCT_EVENTS)[number];

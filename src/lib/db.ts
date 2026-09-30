@@ -28,6 +28,7 @@ export function database(): Sql {
   const connectionString = readEnv(ENV.databaseUrl);
   if (!connectionString) throw new DatabaseUnavailable();
   // The transaction pooler does not support prepared statements.
-  client = postgres(cleanConnectionString(connectionString), { prepare: false, max: 5, idle_timeout: 20 });
+  const max = Number(readEnv(ENV.databasePoolMax)) || 5;
+  client = postgres(cleanConnectionString(connectionString), { prepare: false, max, idle_timeout: 20 });
   return client;
 }

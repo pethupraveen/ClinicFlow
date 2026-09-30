@@ -1,5 +1,5 @@
 /** Routes that are rendered per request and get the nonce-based policy. */
-const NONCE_CSP_PREFIXES = ["/app", "/signup", "/login", "/welcome", "/auth"];
+const NONCE_CSP_PREFIXES = ["/app", "/signup", "/login", "/welcome", "/auth", "/platform"];
 
 export function usesNonceCsp(pathname: string): boolean {
   return NONCE_CSP_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));

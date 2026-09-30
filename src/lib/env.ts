@@ -17,6 +17,7 @@ export function readEnv(names: readonly string[], env: Record<string, string | u
 
 export const ENV = {
   databaseUrl: ["POSTGRES_URL", "DATABASE_URL"],
+  databasePoolMax: ["DATABASE_POOL_MAX"],
   supabaseUrl: ["SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL"],
   supabaseAnonKey: [
     "SUPABASE_PUBLISHABLE_KEY",
@@ -26,4 +27,12 @@ export const ENV = {
   ],
   supabaseServiceKey: ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
   rateLimitSalt: ["AUTH_RATE_LIMIT_SALT"],
+  metaAppSecret: ["META_APP_SECRET"],
+  whatsappVerifyToken: ["WHATSAPP_VERIFY_TOKEN"],
+  whatsappTokenKey: ["WHATSAPP_TOKEN_KEY"],
+  sharedPhoneNumberId: ["WHATSAPP_SHARED_PHONE_NUMBER_ID"],
+  sharedAccessToken: ["WHATSAPP_SHARED_ACCESS_TOKEN"],
+  sharedDisplayNumber: ["WHATSAPP_SHARED_DISPLAY_NUMBER"],
+  graphVersion: ["WHATSAPP_GRAPH_VERSION"],
+  staffEmails: ["CLINICFLOW_STAFF_EMAILS"],
 } as const;

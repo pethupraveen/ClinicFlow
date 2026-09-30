@@ -14,9 +14,9 @@ export const STEPS: readonly StepDef[] = [
   { number: 2, key: "doctors", title: "Doctors", available: true },
   { number: 3, key: "schedules", title: "Working hours", available: true },
   { number: 4, key: "faq", title: "Common questions", available: true },
-  { number: 5, key: "whatsapp", title: "Connect WhatsApp", available: false, comingIn: "Coming next: connecting your clinic's WhatsApp number." },
+  { number: 5, key: "whatsapp", title: "WhatsApp", available: true },
   { number: 6, key: "test", title: "Test your bot", available: true },
-  { number: 7, key: "golive", title: "Go live", available: false, comingIn: "Coming next: switch your bot on for real patients once setup is complete." },
+  { number: 7, key: "golive", title: "Go live", available: true },
 ];
 
 /** What the database says about a clinic's setup. */
@@ -29,6 +29,7 @@ export interface OnboardingFacts {
   emailVerified: boolean;
   whatsappConnected: boolean;
   botTested: boolean;
+  isLive: boolean;
 }
 
 export interface StepState extends StepDef {
@@ -53,7 +54,7 @@ export function computeProgress(f: OnboardingFacts): Progress {
     faq: f.faqCount > 0 || f.faqSkipped,
     whatsapp: f.whatsappConnected,
     test: f.botTested,
-    golive: false,
+    golive: f.isLive,
   };
   const steps = STEPS.map((step) => ({ ...step, done: done[step.key] }));
   const mandatory = [done.clinic, done.doctors, done.schedules, f.emailVerified, done.whatsapp];

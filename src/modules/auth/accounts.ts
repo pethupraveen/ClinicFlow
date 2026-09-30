@@ -6,6 +6,7 @@ import { database } from "@/lib/db";
 import { recordProductEvent } from "@/modules/onboarding/events";
 import { DEFAULT_TIME_ZONE } from "@/modules/trial/dates";
 import { createTrialSubscription } from "@/modules/trial/store";
+import { newWaCode } from "@/modules/whatsapp/codes";
 import { newPublicId } from "./tokens";
 
 export type Role = "OWNER" | "ADMIN" | "RECEPTIONIST";
@@ -44,8 +45,8 @@ export async function createAccountRecords(input: {
     `;
     if (inserted.length === 0) return false;
     const [business] = await tx<{ id: string; public_id: string }[]>`
-      INSERT INTO businesses (public_id, name, time_zone, acq_visitor_id, signup_attribution)
-      VALUES (${newPublicId("c")}, ${input.clinicName}, ${DEFAULT_TIME_ZONE}, ${input.visitorId}::uuid,
+      INSERT INTO businesses (public_id, wa_code, name, time_zone, acq_visitor_id, signup_attribution)
+      VALUES (${newPublicId("c")}, ${newWaCode()}, ${input.clinicName}, ${DEFAULT_TIME_ZONE}, ${input.visitorId}::uuid,
               ${tx.json(attribution as unknown as JSONValue)})
       RETURNING id, public_id
     `;

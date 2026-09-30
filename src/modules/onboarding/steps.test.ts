@@ -10,6 +10,7 @@ const empty: OnboardingFacts = {
   emailVerified: true,
   whatsappConnected: false,
   botTested: false,
+  isLive: false,
 };
 
 describe("computeProgress", () => {
@@ -19,12 +20,15 @@ describe("computeProgress", () => {
     expect(p.next?.key).toBe("clinic");
   });
 
-  it("derives each step from real data and tops out at 80% before WhatsApp", () => {
+  it("derives each step from real data; WhatsApp completes the mandatory items", () => {
     const p = computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 2, doctorsWithHours: 1, faqCount: 3 });
     expect(p.steps.filter((s) => s.done).map((s) => s.key)).toEqual(["clinic", "doctors", "schedules", "faq"]);
     expect(p.percent).toBe(80);
-    expect(p.next?.key).toBe("test"); // step 5 isn't available yet; step 6 is
-    expect(computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 1, doctorsWithHours: 1, faqCount: 1, botTested: true }).next).toBeNull();
+    expect(p.next?.key).toBe("whatsapp");
+    const ready = computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 1, doctorsWithHours: 1, faqCount: 1, whatsappConnected: true, botTested: true });
+    expect(ready.percent).toBe(100);
+    expect(ready.next?.key).toBe("golive");
+    expect(computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 1, doctorsWithHours: 1, faqCount: 1, whatsappConnected: true, botTested: true, isLive: true }).next).toBeNull();
   });
 
   it("needs a doctor with hours, not just a doctor", () => {
