@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import authStyles from "@/modules/auth/components/auth.module.css";
 import { requireMember } from "@/modules/auth/guards";
+import { TestChat } from "@/modules/bot/components/TestChat";
+import { transcript } from "@/modules/bot/store";
 import { archiveDoctorAction, deleteFaqAction, skipFaqAction } from "@/modules/onboarding/actions";
 import { OnboardingShell } from "@/modules/onboarding/components/OnboardingShell";
 import s from "@/modules/onboarding/components/onboarding.module.css";
@@ -136,6 +138,36 @@ export default async function OnboardingStepPage({ params, searchParams }: PageP
               </form>
             ) : null}
           </div>
+        </>
+      );
+      break;
+    }
+    case "test": {
+      const entries = await transcript(businessId, "TEST_CHAT", `test:${membership.userId}`);
+      body = (
+        <>
+          <p className={s.muted}>
+            This is your real bot, running on the clinic details, doctors and hours you set up. Book an appointment as if
+            you were a patient. Test bookings are marked as tests and never block real patients&apos; slots.
+          </p>
+          {progress.steps[2].done ? null : (
+            <p className={authStyles.warn}>
+              No doctor has working hours yet, so there&apos;s nothing to book.{" "}
+              <Link href="/app/onboarding/3" className={authStyles.inlineLink}>
+                Set working hours
+              </Link>
+            </p>
+          )}
+          <TestChat clinicName={membership.business.name} entries={entries} />
+          <Footer next={progress.steps[5].done ? 7 : undefined} nextLabel="Continue" />
+          {progress.steps[5].done ? (
+            <p className={s.muted}>
+              ✅ Test booking done — your clinic is activated.{" "}
+              <Link href="/app/appointments" className={authStyles.inlineLink}>
+                See appointments
+              </Link>
+            </p>
+          ) : null}
         </>
       );
       break;

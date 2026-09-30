@@ -15,7 +15,7 @@ export const STEPS: readonly StepDef[] = [
   { number: 3, key: "schedules", title: "Working hours", available: true },
   { number: 4, key: "faq", title: "Common questions", available: true },
   { number: 5, key: "whatsapp", title: "Connect WhatsApp", available: false, comingIn: "Coming next: connecting your clinic's WhatsApp number." },
-  { number: 6, key: "test", title: "Test your bot", available: false, comingIn: "Coming next: book a test appointment with your own bot, right here in the app." },
+  { number: 6, key: "test", title: "Test your bot", available: true },
   { number: 7, key: "golive", title: "Go live", available: false, comingIn: "Coming next: switch your bot on for real patients once setup is complete." },
 ];
 

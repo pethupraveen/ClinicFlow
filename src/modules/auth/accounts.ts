@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { JSONValue } from "postgres";
 import type { Touch } from "@/modules/attribution/attribution";
 import { database } from "@/lib/db";
 import { recordProductEvent } from "@/modules/onboarding/events";
@@ -45,7 +46,7 @@ export async function createAccountRecords(input: {
     const [business] = await tx<{ id: string; public_id: string }[]>`
       INSERT INTO businesses (public_id, name, time_zone, acq_visitor_id, signup_attribution)
       VALUES (${newPublicId("c")}, ${input.clinicName}, ${DEFAULT_TIME_ZONE}, ${input.visitorId}::uuid,
-              ${JSON.stringify(attribution)}::jsonb)
+              ${tx.json(attribution as unknown as JSONValue)})
       RETURNING id, public_id
     `;
     await tx`

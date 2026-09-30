@@ -29,7 +29,7 @@ export async function createTrialSubscription(
   await tx`
     INSERT INTO subscription_events (subscription_id, business_id, type, to_status, actor_type, actor_user_id, data)
     VALUES (${sub.id}::uuid, ${input.businessId}::uuid, 'TRIAL_STARTED', 'TRIAL', 'USER', ${input.userId}::uuid,
-            ${JSON.stringify({ trialDays: plan.trialDays })}::jsonb)
+            ${tx.json({ trialDays: plan.trialDays })})
   `;
 }
 

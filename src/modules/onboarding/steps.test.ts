@@ -23,7 +23,8 @@ describe("computeProgress", () => {
     const p = computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 2, doctorsWithHours: 1, faqCount: 3 });
     expect(p.steps.filter((s) => s.done).map((s) => s.key)).toEqual(["clinic", "doctors", "schedules", "faq"]);
     expect(p.percent).toBe(80);
-    expect(p.next).toBeNull(); // steps 5–7 aren't available yet
+    expect(p.next?.key).toBe("test"); // step 5 isn't available yet; step 6 is
+    expect(computeProgress({ ...empty, clinicInfoComplete: true, doctorCount: 1, doctorsWithHours: 1, faqCount: 1, botTested: true }).next).toBeNull();
   });
 
   it("needs a doctor with hours, not just a doctor", () => {

@@ -10,16 +10,19 @@ export const PRODUCT_EVENTS = [
   "schedule_saved",
   "faq_added",
   "faq_skipped",
+  "appointment_booked",
+  "appointment_cancelled",
+  "bot_tested",
 ] as const;
 
 export type ProductEvent = (typeof PRODUCT_EVENTS)[number];
 
 export async function recordProductEvent(
   sql: Sql | TransactionSql,
-  input: { businessId: string; userId: string; name: ProductEvent; properties?: Record<string, string | number | boolean> },
+  input: { businessId: string; userId: string | null; name: ProductEvent; properties?: Record<string, string | number | boolean> },
 ): Promise<void> {
   await sql`
     INSERT INTO product_events (business_id, user_id, name, properties)
-    VALUES (${input.businessId}::uuid, ${input.userId}::uuid, ${input.name}, ${JSON.stringify(input.properties ?? {})}::jsonb)
+    VALUES (${input.businessId}::uuid, ${input.userId}::uuid, ${input.name}, ${sql.json(input.properties ?? {})})
   `;
 }

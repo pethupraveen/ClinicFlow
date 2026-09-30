@@ -36,6 +36,15 @@ export default async function AppHomePage() {
           You&apos;re signed in as {user.email}. Set up {membership.business.name} so your WhatsApp receptionist knows
           your doctors, hours and common questions.
         </p>
+        <p className={s.subtitle}>
+          <Link href="/app/appointments" className={s.inlineLink}>
+            View appointments
+          </Link>
+          {" · "}
+          <Link href="/app/onboarding/6" className={s.inlineLink}>
+            Test your bot
+          </Link>
+        </p>
       </section>
       <section className={s.panel}>
         <ProgressBar progress={progress} />
@@ -46,7 +55,7 @@ export default async function AppHomePage() {
                 Next: <strong>{progress.next.title}</strong>
               </>
             ) : (
-              "Clinic setup is done for now. WhatsApp connection and Go Live are coming next."
+              "Setup is done for now. Connecting WhatsApp and going live are coming next."
             )}
           </span>
           <Link href={progress.next ? `/app/onboarding/${progress.next.number}` : "/app/onboarding/1"} className={o.primaryLink}>

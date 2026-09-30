@@ -12,6 +12,7 @@ import { keyedHash } from "./tokens";
 export const LIMITS = {
   googleStartPerIp: { bucket: "google-start:ip", max: 30, windowSeconds: 15 * 60 },
   createClinicPerIp: { bucket: "create-clinic:ip", max: 5, windowSeconds: 60 * 60 },
+  testChatPerUser: { bucket: "test-chat:user", max: 200, windowSeconds: 60 * 60 },
 } as const;
 
 export type Limit = (typeof LIMITS)[keyof typeof LIMITS];
